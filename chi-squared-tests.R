@@ -2,6 +2,10 @@
 
 # library(rmarkdown)
 
+rounded <- function(n) {
+  return(format(round(n, 2), nsmall = 2))
+}
+
 goodness_of_fit.test <- function(test.proportions, test.sample) {
   n <- length(test.sample)
   m <- sum(test.sample)
@@ -12,11 +16,11 @@ goodness_of_fit.test <- function(test.proportions, test.sample) {
   for (i in 1:n) {
     ei <- m * test.proportions[i]/100
     running_sum <- running_sum + (test.sample[i]-ei)^2/ei
-    ei.value[place] <- paste("e_{",i,"}=", m ,'\\', 'cdot', osuudet[i]/100, "=", ei, " \\" , sep="")
+    ei.value[place] <- paste("e_{",i,"}=", m ,'\\', 'cdot', rounded(test.proportions[i]/100), "=", rounded(ei), " \\" , sep="")
     if (place < n) {
-      ts <- paste(ts, '\frac{(',test.sample[i], '-' , ei, ')^2}{', ei, '}+' ,sep="")
+      ts <- paste(ts, '\frac{(',rounded(test.sample[i]), '-' , ei, ')^2}{', ei, '}+' ,sep="")
     } else {
-      ts <- paste(ts, '\frac{(',test.sample[i], '-' , ei, ')^2}{', ei, '}=',running_sum ,sep="")
+      ts <- paste(ts, '\frac{(',rounded(test.sample[i]), '-' , ei, ')^2}{', ei, '}=',rounded(running_sum) ,sep="")
     }
     place <- place + 1
   }
@@ -38,17 +42,17 @@ tc_independence.test <- function(sample_matrix) {
     for (j in 1:cols) {
       eij.current <- sum(sample_matrix[i,])*sum(sample_matrix[,j]) / matrix_sum
       running_sum <- running_sum + (sample_matrix[i,j]-eij.current)^2/eij.current
-      e.ij.vector[place] <- paste("e_{",i ,j,"}=", "\frac{", sum(sample_matrix[i,]), '\\', 'cdot', sum(sample_matrix[,j]), "}{",matrix_sum, "}=", eij.current, " \\" , sep="")
+      e.ij.vector[place] <- paste("e_{",i ,j,"}=", "\frac{", rounded(sum(sample_matrix[i,])), '\\', 'cdot', rounded(sum(sample_matrix[,j])), "}{",rounded(matrix_sum), "}=", rounded(eij.current), " \\" , sep="")
       if (place < length(sample_matrix)) {
-        ts <- paste(ts, '\frac{(',sample_matrix[i,j], '-' , eij.current, ')^2}{', eij.current, '}+' ,sep="")
+        ts <- paste(ts, '\frac{(',rounded(sample_matrix[i,j]), '-' , rounded(eij.current), ')^2}{', rounded(eij.current), '}+' ,sep="")
       } else {
-        ts <- paste(ts, '\frac{(',sample_matrix[i,j], '-' , eij.current, ')^2}{', eij.current, '}=',running_sum ,sep="")
+        ts <- paste(ts, '\frac{(',rounded(sample_matrix[i,j]), '-' , rounded(eij.current), ')^2}{', rounded(eij.current), '}=',rounded(running_sum) ,sep="")
       }
 
       place <- place + 1
     }
   }
-  result <- list('e_ij=}frac{Ni\\cdotMj}{n}',matrix(e.ij.vector, ncol=1), 'TS=sum_{i}sum_{j}\frac{(N_{ij}-\\hat{e}_{ij})^2}{\\hat{e}_{ij}}',ts, running_sum)
+  result <- list('e_ij=\frac{Ni\\cdotMj}{n}',matrix(e.ij.vector, ncol=1), 'TS=sum_{i}sum_{j}\frac{(N_{ij}-\\hat{e}_{ij})^2}{\\hat{e}_{ij}}',ts, running_sum)
   names(result) <- c('calculation.1.function', 'ts.calculation.1', 'calculation.2.function', 'ts.calculation.2', 'ts.sum')
   return(result)
 }

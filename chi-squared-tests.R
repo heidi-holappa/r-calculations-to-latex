@@ -2,6 +2,10 @@ rounded <- function(n) {
   return(format(round(n, 2), nsmall = 2))
 }
 
+rounded.d3 <- function(n) {
+  return(format(round(n, 3), nsmall = 2))
+}
+
 goodness_of_fit.test <- function(test.proportions, test.sample) {
   n <- length(test.sample)
   m <- sum(test.sample)
@@ -12,7 +16,7 @@ goodness_of_fit.test <- function(test.proportions, test.sample) {
   for (i in 1:n) {
     ei <- m * test.proportions[i]/100
     running_sum <- running_sum + (test.sample[i]-ei)^2/ei
-    ei.value[place] <- paste("e_{",i,"}=", m ,'\\', 'cdot', rounded(test.proportions[i]/100), "=", rounded(ei), " \\" , sep="")
+    ei.value[place] <- paste("e_{",i,"}=", m ,'\\', 'cdot', rounded.d3(test.proportions[i]/100), "=", rounded(ei), " \\" , sep="")
     if (place < n) {
       ts <- paste(ts, '\frac{(',rounded(test.sample[i]), '-' , rounded(ei), ')^2}{', rounded(ei), '}+' ,sep="")
     } else {

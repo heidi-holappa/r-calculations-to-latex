@@ -91,6 +91,7 @@ calc.beta <- function(sxy.b, sxx.b) {
   beta.calculation <- paste('\beta=&\frac{',sxy.b,'}{',sxx.b,'}=',rounded.2d(beta.value), sep="")
   result <- list(beta.function, beta.calculation, beta.value)
   names(result) <- c('beta formula', 'beta calculation', 'beta value' )
+  return(result)
 }
 
 compile <- function(x,y) {
@@ -98,7 +99,7 @@ compile <- function(x,y) {
   sxx.c <- sxx(x)
   syy.c <- syy(y)
   sxy.c <- sxy(x,y)
-  beta.c <- calc.beta(sxy.c, sxx.c)
+  beta.c <- calc.beta(sxy.c[[3]], sxx.c[[3]])
   result = list(params.c, sxx.c, syy.c, sxy.c, beta.c)
   names(result) = c('parameters', 'S_xx', 'S_yy', 'S_xy', 'Beta')
   return(result)
